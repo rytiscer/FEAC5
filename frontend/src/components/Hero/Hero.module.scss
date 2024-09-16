@@ -30,3 +30,9 @@
     font-size: 1rem;
   }
 }
+
+.searchBar {
+  display: flex;
+  justify-content: center; /* Center the search bar horizontally */
+  margin-top: 20px; /* Add spacing between the subtitle and search bar */
+}

@@ -12,7 +12,9 @@ const Hero = () => {
       <p className={styles.subtitle}>
         Explore Best Home Service & Repair near you
       </p>
+      <div className={styles.searchBar}>
       <SearchBar/>
+      </div>
     </div>
   );
 };
