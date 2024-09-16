@@ -1,3 +1,4 @@
+import SearchBar from "../SearchBar/SearchBar";
 import styles from "./Hero.module.scss";
 
 const Hero = () => {
@@ -11,6 +12,7 @@ const Hero = () => {
       <p className={styles.subtitle}>
         Explore Best Home Service & Repair near you
       </p>
+      <SearchBar/>
     </div>
   );
 };
