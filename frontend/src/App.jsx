@@ -1,23 +1,23 @@
 import { Route, Routes } from "react-router-dom";
-import NavigationBar from "./components/NavigationBar/NavigationBar";
-
+import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
 import AboutUs from "./pages/AboutUs";
-import Login from "./pages/Login";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 import { ROUTES } from "./router/consts";
 
 const App = () => {
   return (
-    <>
-      <NavigationBar />
-      <Routes>
+    <Routes>
+      <Route element={<MainLayout />}>
         <Route path={ROUTES.HOME} element={<Home />} />
         <Route path={ROUTES.SERVICES} element={<Services />} />
         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
-        <Route path={ROUTES.LOGIN} element={<Login />} />
-      </Routes>
-    </>
+      </Route>
+      <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route path={ROUTES.REGISTER} element={<Register />} />
+    </Routes>
   );
 };
 
