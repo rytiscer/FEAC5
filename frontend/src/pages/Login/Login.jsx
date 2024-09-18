@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.scss";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -20,8 +21,8 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // Handle successful form submission
-      console.log("Form submitted");
+      login({ email });
+      window.location.href = "/";
     }
   };
 
@@ -30,9 +31,7 @@ const Login = () => {
       <h2 className={styles.heading}>Login</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
-          <label htmlFor="email" className={styles.label}>
-            Email
-          </label>
+          <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
@@ -43,9 +42,7 @@ const Login = () => {
           {errors.email && <p className={styles.error}>{errors.email}</p>}
         </div>
         <div className={styles.inputGroup}>
-          <label htmlFor="password" className={styles.label}>
-            Password
-          </label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
@@ -59,17 +56,6 @@ const Login = () => {
           Login
         </button>
       </form>
-      <div className={styles.socialLogin}>
-        <button className={styles.socialButton}>
-          <FaGoogle className={styles.icon} /> Login with Gmail
-        </button>
-        <button className={styles.socialButton}>
-          <FaFacebook className={styles.icon} /> Login with Facebook
-        </button>
-      </div>
-      <a href="#" className={styles.forgotPassword}>
-        Forgot Password?
-      </a>
     </div>
   );
 };
