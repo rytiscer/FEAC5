@@ -1,33 +1,42 @@
 const express = require("express");
 const router = express.Router();
-const data = require("../data");
+const Business = require("../models/Business");
 
 // GET all businesses
-router.get("/", (req, res) => {
-  res.json(data.businesses);
+router.get("/", async (req, res) => {
+  try {
+    const businesses = await Business.find();
+    res.json(businesses);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // GET businesses by category
-router.get("/category/:category", (req, res) => {
-  const category = req.params.category.toLowerCase();
-  const filteredBusinesses = data.businesses.filter(
-    (b) => b.category.toLowerCase() === category
-  );
-  res.json(filteredBusinesses);
+router.get("/category/:category", async (req, res) => {
+  try {
+    const businesses = await Business.find({ category: req.params.category });
+    res.json(businesses);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // GET a specific business by ID
-router.get("/:id", (req, res) => {
-  const business = data.businesses.find((b) => b.id == req.params.id);
-  if (business) {
+router.get("/:id", async (req, res) => {
+  try {
+    const business = await Business.findById(req.params.id);
+    if (!business) {
+      return res.status(404).send("Business not found");
+    }
     res.json(business);
-  } else {
-    res.status(404).send("Business not found");
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
 // POST create new business
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { name, description, address, category, contactPerson, email, photos } =
     req.body;
   if (
@@ -42,27 +51,25 @@ router.post("/", (req, res) => {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  const newBusiness = {
-    id: data.businesses.length + 1,
-    name,
-    description,
-    address,
-    category,
-    contactPerson,
-    email,
-    photos,
-  };
-  data.businesses.push(newBusiness);
-  res.status(201).json(newBusiness);
+  try {
+    const newBusiness = new Business({
+      name,
+      description,
+      address,
+      category,
+      contactPerson,
+      email,
+      photos,
+    });
+    const savedBusiness = await newBusiness.save();
+    res.status(201).json(savedBusiness);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // PUT update business by ID
-router.put("/:id", (req, res) => {
-  const business = data.businesses.find((b) => b.id == req.params.id);
-  if (!business) {
-    return res.status(404).send("Business not found");
-  }
-
+router.put("/:id", async (req, res) => {
   const { name, description, address, category, contactPerson, email, photos } =
     req.body;
   if (
@@ -77,24 +84,32 @@ router.put("/:id", (req, res) => {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  business.name = name;
-  business.description = description;
-  business.address = address;
-  business.category = category;
-  business.contactPerson = contactPerson;
-  business.email = email;
-  business.photos = photos;
-
-  res.json(business);
+  try {
+    const updatedBusiness = await Business.findByIdAndUpdate(
+      req.params.id,
+      { name, description, address, category, contactPerson, email, photos },
+      { new: true }
+    );
+    if (!updatedBusiness) {
+      return res.status(404).send("Business not found");
+    }
+    res.json(updatedBusiness);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // GET all bookings for a business on a specific date
-router.get("/:businessId/bookings/date/:date", (req, res) => {
-  const { businessId, date } = req.params;
-  const slots = data.bookings.filter(
-    (b) => b.businessId == businessId && b.date === date
-  );
-  res.json(slots);
+router.get("/:businessId/bookings/date/:date", async (req, res) => {
+  try {
+    const bookings = await Booking.find({
+      businessId: req.params.businessId,
+      date: req.params.date,
+    });
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

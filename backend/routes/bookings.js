@@ -1,43 +1,50 @@
 const express = require("express");
 const router = express.Router();
-const data = require("../data");
+const Booking = require("../models/Booking");
 
 // GET all bookings by user email
-router.get("/user/:email", (req, res) => {
-  const userBookings = data.bookings.filter(
-    (b) => b.userEmail === req.params.email
-  );
-  res.json(userBookings);
+router.get("/user/:email", async (req, res) => {
+  try {
+    const bookings = await Booking.find({ userEmail: req.params.email });
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // POST create new booking
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { businessId, date, time, userEmail, userName, status } = req.body;
   if (!businessId || !date || !time || !userEmail || !userName || !status) {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  const newBooking = {
-    id: data.bookings.length + 1,
-    businessId,
-    date,
-    time,
-    userEmail,
-    userName,
-    status,
-  };
-  data.bookings.push(newBooking);
-  res.status(201).json(newBooking);
+  try {
+    const newBooking = new Booking({
+      businessId,
+      date,
+      time,
+      userEmail,
+      userName,
+      status,
+    });
+    const savedBooking = await newBooking.save();
+    res.status(201).json(savedBooking);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // DELETE booking by ID
-router.delete("/:id", (req, res) => {
-  const index = data.bookings.findIndex((b) => b.id == req.params.id);
-  if (index !== -1) {
-    data.bookings.splice(index, 1);
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedBooking = await Booking.findByIdAndDelete(req.params.id);
+    if (!deletedBooking) {
+      return res.status(404).send("Booking not found");
+    }
     res.send("Booking deleted");
-  } else {
-    res.status(404).send("Booking not found");
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
