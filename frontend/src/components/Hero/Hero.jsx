@@ -1,3 +1,4 @@
+import CategoryList from "../CategoryCard/CategoryList";
 import SearchBar from "../SearchBar/SearchBar";
 import styles from "./Hero.module.scss";
 
@@ -13,8 +14,9 @@ const Hero = () => {
         Explore Best Home Service & Repair near you
       </p>
       <div className={styles.searchBar}>
-      <SearchBar/>
+        <SearchBar />
       </div>
+      <CategoryList />
     </div>
   );
 };

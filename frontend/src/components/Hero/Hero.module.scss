@@ -1,6 +1,9 @@
 .hero {
   padding: 80px 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .title {
@@ -33,6 +36,14 @@
 
 .searchBar {
   display: flex;
-  justify-content: center; /* Center the search bar horizontally */
-  margin-top: 20px; /* Add spacing between the subtitle and search bar */
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.categoryList {
+  display: flex; 
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
 }
