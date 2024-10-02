@@ -1,0 +1,111 @@
+.loginContainer {
+  max-width: 450px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.heading {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.submitButton {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.125rem;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+.socialLogin {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Space between buttons */
+  margin-top: 30px;
+}
+
+.socialButton {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease;
+  flex: 1; /* Make buttons take up equal space */
+}
+
+.socialButton:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.icon {
+  margin-right: 12px;
+  font-size: 1.5rem;
+}
+
+.forgotPassword {
+  display: block;
+  font-size: 0.875rem;
+  color: #007bff;
+  text-decoration: none;
+  margin-top: 20px;
+  transition: color 0.3s ease;
+}
+
+.forgotPassword:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
