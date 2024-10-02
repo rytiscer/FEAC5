@@ -1,56 +1,71 @@
-import { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.scss";
 
+const errorMessages = {
+  required: "This field is required",
+  invalidEmail: "Invalid email address",
+  passwordMinLength: "Password must be at least 6 characters long",
+};
+
 const Login = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
 
-  const validate = () => {
-    const newErrors = {};
-    if (!email) newErrors.email = "Email is required";
-    if (!password) newErrors.password = "Password is required";
-    else if (password.length < 6)
-      newErrors.password = "Password must be at least 6 characters long";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email(errorMessages.invalidEmail)
+      .required(errorMessages.required),
+    password: Yup.string()
+      .min(6, errorMessages.passwordMinLength)
+      .required(errorMessages.required),
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      login({ email });
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      login({ email: values.email });
       window.location.href = "/";
-    }
-  };
+    },
+  });
 
   return (
     <div className={styles.loginContainer}>
       <h2 className={styles.heading}>Login</h2>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form onSubmit={formik.handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
           <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
             className={styles.input}
           />
-          {errors.email && <p className={styles.error}>{errors.email}</p>}
+          {formik.touched.email && formik.errors.email && (
+            <p className={styles.error}>{formik.errors.email}</p>
+          )}
         </div>
         <div className={styles.inputGroup}>
           <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
             className={styles.input}
           />
-          {errors.password && <p className={styles.error}>{errors.password}</p>}
+          {formik.touched.password && formik.errors.password && (
+            <p className={styles.error}>{formik.errors.password}</p>
+          )}
         </div>
         <button type="submit" className={styles.submitButton}>
           Login

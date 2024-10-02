@@ -1,36 +1,44 @@
-import { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import styles from "./Register.module.scss";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 
+const errorMessages = {
+  required: "This field is required",
+  invalidEmail: "Invalid email address",
+  passwordMinLength: "Password must be at least 6 characters long",
+  passwordsDontMatch: "Passwords do not match",
+};
+
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email(errorMessages.invalidEmail)
+      .required(errorMessages.required),
+    password: Yup.string()
+      .min(6, errorMessages.passwordMinLength)
+      .required(errorMessages.required),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], errorMessages.passwordsDontMatch)
+      .required(errorMessages.required),
+  });
 
-  const validate = () => {
-    const newErrors = {};
-    if (!email) newErrors.email = "Email is required";
-    if (!password) newErrors.password = "Password is required";
-    else if (password.length < 6)
-      newErrors.password = "Password must be at least 6 characters long";
-    if (password !== confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log("Form submitted");
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log("Form submitted", values);
+    },
+  });
 
   return (
     <div className={styles.registerContainer}>
       <h2 className={styles.heading}>Register</h2>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form onSubmit={formik.handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
           <label htmlFor="email" className={styles.label}>
             Email
@@ -38,12 +46,17 @@ const Register = () => {
           <input
             type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className={styles.input}
           />
-          {errors.email && <p className={styles.error}>{errors.email}</p>}
+          {formik.touched.email && formik.errors.email && (
+            <p className={styles.error}>{formik.errors.email}</p>
+          )}
         </div>
+
         <div className={styles.inputGroup}>
           <label htmlFor="password" className={styles.label}>
             Password
@@ -51,12 +64,17 @@ const Register = () => {
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className={styles.input}
           />
-          {errors.password && <p className={styles.error}>{errors.password}</p>}
+          {formik.touched.password && formik.errors.password && (
+            <p className={styles.error}>{formik.errors.password}</p>
+          )}
         </div>
+
         <div className={styles.inputGroup}>
           <label htmlFor="confirmPassword" className={styles.label}>
             Confirm Password
@@ -64,18 +82,22 @@ const Register = () => {
           <input
             type="password"
             id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            name="confirmPassword"
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             className={styles.input}
           />
-          {errors.confirmPassword && (
-            <p className={styles.error}>{errors.confirmPassword}</p>
+          {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+            <p className={styles.error}>{formik.errors.confirmPassword}</p>
           )}
         </div>
+
         <button type="submit" className={styles.submitButton}>
           Register
         </button>
       </form>
+
       <div className={styles.socialLogin}>
         <button className={styles.socialButton}>
           <FaGoogle className={styles.icon} /> Register with Gmail
