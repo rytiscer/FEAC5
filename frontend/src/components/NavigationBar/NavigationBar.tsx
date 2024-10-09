@@ -3,19 +3,17 @@ import styles from "./NavigationBar.module.scss";
 import logo from "../../assets/logoMain.svg";
 import { ROUTES } from "../../router/consts";
 
-// Apibrėžiame vartotojo tipą
 interface User {
   name: string;
 }
 
 interface NavigationBarProps {
-  user?: User; // vartotojas gali būti arba ne (optional)
+  user?: User;
 }
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ user }) => {
   const navigate = useNavigate();
 
-  // Apibrėžiame navigacijos nuorodų tipą
   const links: { href: string; label: string }[] = [
     {
       href: ROUTES.HOME,
