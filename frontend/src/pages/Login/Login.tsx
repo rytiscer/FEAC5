@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { useFormik, FormikErrors } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.scss";
@@ -9,7 +9,12 @@ const errorMessages = {
   passwordMinLength: "Password must be at least 6 characters long",
 };
 
-const Login = () => {
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+const Login: React.FC = () => {
   const { login } = useAuth();
 
   const validationSchema = Yup.object({
@@ -21,14 +26,14 @@ const Login = () => {
       .required(errorMessages.required),
   });
 
-  const formik = useFormik({
+  const formik = useFormik<LoginFormValues>({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      login({ email: values.email });
+      login({ id: "1", name: "User", email: values.email });
       window.location.href = "/";
     },
   });

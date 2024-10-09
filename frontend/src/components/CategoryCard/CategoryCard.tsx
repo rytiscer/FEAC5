@@ -1,7 +1,14 @@
 import React from "react";
 import styles from "../CategoryCard/CategoryList.module.scss";
 
-const CategoryCard = ({ category }) => {
+interface CategoryCardProps {
+  category: {
+    name: string;
+    image: string;
+  };
+}
+
+const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
   const { name, image } = category;
 
   return (
